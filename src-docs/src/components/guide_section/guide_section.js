@@ -129,6 +129,13 @@ export class GuideSection extends Component {
       });
     }
 
+    if (props.playground) {
+      this.tabs.push({
+        name: 'playground',
+        displayName: 'Playground',
+      });
+    }
+
     if (this.componentNames.length) {
       this.tabs.push({
         name: 'props',
@@ -477,6 +484,17 @@ export class GuideSection extends Component {
 
     if (this.state.selectedTab.name === 'snippet') {
       return <EuiErrorBoundary>{this.renderSnippet()}</EuiErrorBoundary>;
+    }
+
+    if (this.state.selectedTab.name === 'playground') {
+      return (
+        <EuiErrorBoundary>
+          <div>
+            <div className="guideSection__space" />
+            {this.props.playground}
+          </div>
+        </EuiErrorBoundary>
+      );
     }
 
     if (this.state.selectedTab.isCode) {

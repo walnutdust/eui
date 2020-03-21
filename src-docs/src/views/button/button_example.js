@@ -29,6 +29,7 @@ const buttonSnippet = [
   `<EuiButton size="s" fill><!-- Small and filled button --></EuiButton>
 `,
 ];
+import ButtonPlayground from './button_playground';
 
 import ButtonWithIcon from './button_with_icon';
 const buttonWithIconSource = require('!!raw-loader!./button_with_icon');
@@ -123,6 +124,7 @@ export const ButtonExample = {
       props: { EuiButton },
       snippet: buttonSnippet,
       demo: <Button />,
+      playground: <ButtonPlayground />,
     },
     {
       title: 'Buttons can also be links',
