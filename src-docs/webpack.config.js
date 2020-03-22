@@ -35,6 +35,9 @@ const webpackConfig = {
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
+    alias: {
+      buble: '@philpl/buble',
+    },
   },
 
   module: {
