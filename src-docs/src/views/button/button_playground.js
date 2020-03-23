@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { LiveProvider, LiveError, LivePreview } from 'react-live';
+import { LiveProvider, LivePreview, LiveContext } from 'react-live';
 
 import {
   EuiButton,
   EuiCodeEditor,
   EuiSpacer,
+  EuiCallOut,
+  EuiCodeBlock,
 } from '../../../../src/components/';
 
 import 'brace/theme/tomorrow';
@@ -71,9 +73,28 @@ export default class ButtonPlayground extends Component {
       <div>
         <LiveProvider code={this.state.value} scope={{ EuiButton }}>
           <LivePreview />
-          <EuiSpacer size="s" />
-          <LiveError />
-          <EuiSpacer size="s" />
+          <EuiSpacer size="m" />
+          <LiveContext.Consumer>
+            {({ error }) => {
+              if (!error) return null;
+
+              const splitError = error.split('\n');
+              const errorMessage = splitError[0];
+              const errorCode = splitError.slice(1).join('\n');
+
+              return (
+                <EuiCallOut
+                  title={errorMessage}
+                  color="danger"
+                  iconType="alert">
+                  <EuiCodeBlock language="jsx" paddingSize="s" fontSize="m">
+                    {errorCode}
+                  </EuiCodeBlock>
+                </EuiCallOut>
+              );
+            }}
+          </LiveContext.Consumer>
+          <EuiSpacer size="m" />
           <EuiCodeEditor
             value={this.state.value}
             onChange={this.onChange}
