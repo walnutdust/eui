@@ -74,6 +74,8 @@ export default class Playground extends Component {
             {({ error }) => {
               if (!error) return null;
 
+              console.log(error);
+
               const splitError = error.split('\n');
               const errorMessage = splitError[0];
               const errorCode = splitError.slice(1).join('\n');
@@ -83,9 +85,11 @@ export default class Playground extends Component {
                   title={errorMessage}
                   color="danger"
                   iconType="alert">
-                  <EuiCodeBlock language="jsx" paddingSize="s" fontSize="m">
-                    {errorCode}
-                  </EuiCodeBlock>
+                  {errorCode !== '' && (
+                    <EuiCodeBlock language="jsx" paddingSize="s" fontSize="m">
+                      {errorCode}
+                    </EuiCodeBlock>
+                  )}
                 </EuiCallOut>
               );
             }}

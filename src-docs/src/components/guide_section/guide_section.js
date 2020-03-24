@@ -311,18 +311,17 @@ export class GuideSection extends Component {
         meta: 'props',
 
         // Autocomplete title, typically the name
-        caption: propName,
+        caption: required ? `${propName} (required)` : propName,
 
         // Actual value that gets filled up when user selects the option.
         value: defaultValue
-          ? `${propName}=${defaultValue.value}`
+          ? `${propName}={${defaultValue.value}}`
           : `${propName}`,
 
         // Information in tooltip.
         description,
         propType: humanizeType(type),
         defaultValue: defaultValue ? defaultValue.value : '',
-        required,
       };
     });
 
