@@ -270,9 +270,9 @@ export class GuideSection extends Component {
     return snippetCode;
   }
 
-  renderPropsForComponent = (componentName, component) => {
+  getDocumentedProps = component => {
     if (!component.__docgenInfo) {
-      return;
+      return null;
     }
 
     const docgenInfo = Array.isArray(component.__docgenInfo)
@@ -281,9 +281,62 @@ export class GuideSection extends Component {
     const { description, props } = docgenInfo;
 
     if (!props && !description) {
+      return null;
+    }
+
+    return docgenInfo;
+  };
+
+  getComponentPropsForPlayground = (componentName, component) => {
+    const docgenInfo = this.getDocumentedProps(component);
+
+    if (!docgenInfo) {
       return;
     }
 
+    const { props } = docgenInfo;
+    const propNames = Object.keys(props);
+
+    const propsInfo = propNames.map(propName => {
+      const {
+        description: description = '',
+        required,
+        defaultValue,
+        type,
+      } = props[propName];
+
+      return {
+        // Prop descriptions should all have this.
+        type: 'props',
+        meta: 'props',
+
+        // Autocomplete title, typically the name
+        caption: propName,
+
+        // Actual value that gets filled up when user selects the option.
+        value: defaultValue
+          ? `${propName}=${defaultValue.value}`
+          : `${propName}`,
+
+        // Information in tooltip.
+        description,
+        propType: humanizeType(type),
+        defaultValue: defaultValue ? defaultValue.value : '',
+        required,
+      };
+    });
+
+    return propsInfo;
+  };
+
+  renderPropsForComponent = (componentName, component) => {
+    const docgenInfo = this.getDocumentedProps(component);
+
+    if (!docgenInfo) {
+      return;
+    }
+
+    const { description, props } = docgenInfo;
     const propNames = Object.keys(props);
 
     const rows = propNames.map(propName => {
@@ -412,6 +465,15 @@ export class GuideSection extends Component {
       .reduce((a, b) => a.concat(b), []); // Flatten the resulting array
   }
 
+  getPlaygroundPropTips() {
+    const { props } = this.props;
+    return this.componentNames
+      .map(componentName =>
+        this.getComponentPropsForPlayground(componentName, props[componentName])
+      )
+      .reduce((a, b) => a.concat(b), []); // Flatten the resulting array
+  }
+
   renderChrome() {
     let title;
 
@@ -491,7 +553,7 @@ export class GuideSection extends Component {
         <EuiErrorBoundary>
           <div>
             <div className="guideSection__space" />
-            {this.props.playground}
+            {this.props.playground(this.getPlaygroundPropTips())}
           </div>
         </EuiErrorBoundary>
       );

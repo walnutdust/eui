@@ -5,6 +5,7 @@ import { EuiCode } from '../../../../../src/components';
 import { propsInfo } from './props_info';
 
 import { Table } from './basic';
+import { BasicPlayground } from './basic_playground';
 
 const source = require('!!raw-loader!./basic');
 const html = renderToHtml(Table);
@@ -82,4 +83,5 @@ export const section = {
   ),
   props: propsInfo,
   demo: <Table />,
+  playground: BasicPlayground,
 };

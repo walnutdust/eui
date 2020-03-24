@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { LiveProvider, LivePreview, LiveContext } from 'react-live';
 
 import {
-  EuiButton,
   EuiCodeEditor,
   EuiSpacer,
   EuiCallOut,
@@ -15,17 +15,6 @@ import 'brace/mode/jsx';
 import 'brace/snippets/jsx';
 
 export default class Playground extends Component {
-  static defaultProps = {
-    value: `
-`,
-    mode: 'jsx',
-    theme: 'tomorrow',
-    width: '100%',
-    height: '200px',
-    fontSize: '18px',
-    autoComplete: [],
-  };
-
   state = {
     value: this.props.value,
   };
@@ -35,7 +24,15 @@ export default class Playground extends Component {
   };
 
   render() {
-    const { mode, theme, width, height, fontSize, autoComplete } = this.props;
+    const {
+      mode,
+      theme,
+      width,
+      height,
+      fontSize,
+      autoComplete,
+      scope,
+    } = this.props;
 
     const codeEditorOptions = {
       fontSize,
@@ -48,15 +45,15 @@ export default class Playground extends Component {
             if (item.type === 'props' && !item.docHTML) {
               const {
                 caption,
-                propDescription = '',
+                description = '',
                 propType = '',
-                defaultParam = '',
+                defaultValue = '',
               } = item;
               item.docHTML = [
                 `<b>${caption}</b><hr>`,
-                `${propDescription}`,
-                `${propType ? `Type: ${propType}` : ''}`,
-                `${defaultParam ? `Default: ${defaultParam}` : ''}`,
+                `${description}`,
+                `${propType ? `<b>Type</b>: ${propType}` : ''}`,
+                `${defaultValue ? `<b>Default</b>: ${defaultValue}` : ''}`,
               ]
                 .filter(str => str !== '')
                 .join('\n');
@@ -70,7 +67,7 @@ export default class Playground extends Component {
 
     return (
       <div>
-        <LiveProvider code={this.state.value} scope={{ EuiButton }}>
+        <LiveProvider code={this.state.value} scope={scope}>
           <LivePreview />
           <EuiSpacer size="m" />
           <LiveContext.Consumer>
@@ -108,3 +105,29 @@ export default class Playground extends Component {
     );
   }
 }
+
+Playground.propTypes = {
+  value: PropTypes.string,
+  mode: PropTypes.string,
+  theme: PropTypes.string,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  fontSize: PropTypes.string,
+  autoComplete: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.object),
+  ]),
+  scope: PropTypes.object,
+};
+
+Playground.defaultProps = {
+  value: `
+`,
+  mode: 'jsx',
+  theme: 'tomorrow',
+  width: '100%',
+  height: '200px',
+  fontSize: '18px',
+  autoComplete: [],
+  scope: {},
+};

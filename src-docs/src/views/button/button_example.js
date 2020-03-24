@@ -124,7 +124,7 @@ export const ButtonExample = {
       props: { EuiButton },
       snippet: buttonSnippet,
       demo: <Button />,
-      playground: <ButtonPlayground />,
+      playground: ButtonPlayground,
     },
     {
       title: 'Buttons can also be links',
